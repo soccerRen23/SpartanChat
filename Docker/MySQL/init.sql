@@ -1,4 +1,3 @@
-# 最初の6行はサンプルアプリと同じ
 DROP DATABASE chatapp;
 DROP USER 'testuser';
 
@@ -40,10 +39,6 @@ CREATE TABLE messages (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (channel_id) REFERENCES channels(id) ON DELETE CASCADE
 );
-
-# ON DELETE CASCADEもサンプルアプリと同じ
-# これだとユーザーが消えたら自動的にチャンネルもメッセージも消えてしまう
-# 本来はそんなことにはしないと思うがとりあえず先に進みます
 
 # サンプルアプリと同様にサンプルデータを入れておく
 INSERT INTO users (name, email, password_hash)
