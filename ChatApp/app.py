@@ -10,7 +10,7 @@ app.secret_key = os.getenv('SECRET_KEY')
 
 # ルート画面のリダイレクト処理
 @app.route('/', methods=['GET'])
-def  index():
+def index():
     user_id = session.get('user_id')
     if user_id is None:
         return redirect(url_for('login_view'))
@@ -34,23 +34,24 @@ def signup_process():
     if name == '' or email == '' or password == '':
         flash('名前、メールアドレス、パスワードの全てを入力してください')
         return redirect(url_for('signup_view'))
-    
+
     if password != passwordConfirmation:
         flash('二つのパスワードが一致しません')
         return redirect(url_for('signup_view'))
 
     password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    # 入力されたemailを引数として関数に渡しDBからユーザー情報取得。情報なければNoneを返す
     registered_user = User.find_by_email(email)
 
+    # 既存ユーザーの重複登録防止
     if registered_user != None:
         flash('既に登録されています')
         return redirect(url_for('signup_view'))
     else:
-        User.create(name, email, password_hash)  # DBに登録
-        new_user = User.find_by_email(email)  # DBからユーザー情報を取得
-        user_id = str(new_user['id'])  # ユーザーのidを取得（辞書型なのでこの書き方、strは不要かも）
-        session['user_id'] = user_id  # sessionにidを追加
+        # DBへ登録しログイン状態をセッションで保持
+        User.create(name, email, password_hash)
+        new_user = User.find_by_email(email)
+        user_id = str(new_user['id'])
+        session['user_id'] = user_id
         return redirect(url_for('channels_view'))
 
 
@@ -70,17 +71,17 @@ def login_process():
         flash('メールアドレスとパスワードを入力してください')
         return redirect(url_for('login_view'))
     
-    registered_user = User.find_by_email(email)
-    if registered_user is None:
-        flash('このユーザーは存在しません')
-        return redirect(url_for('login_view'))
-    
     password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    if password_hash != registered_user["password_hash"]:
-        flash('パスワードが違います')
+    registered_user = User.find_by_email(email)
+
+    # 「ユーザー不存在」または「パスワードの誤り」を区別せず同一のメッセージを返す
+    # これによりアカウントを推察する手掛かりを遮断する
+    if registered_user is None or password_hash != registered_user["password_hash"]:
+        flash('情報が正しくありません')
         return redirect(url_for('login_view'))
     else:
-        session['user_id'] = registered_user["id"]  # sessionにDB上のユーザーidを入れておこう
+        # ログイン状態をセッションで保持
+        session['user_id'] = registered_user["id"]
         return redirect(url_for('channels_view'))
 
 
