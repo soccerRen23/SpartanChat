@@ -11,24 +11,19 @@ db_pool = DB.init_db_pool()
 class User:
    @classmethod
    def create(cls, name, email, password_hash):
-       # データベース接続プールからコネクションを一つ借りる
        conn = db_pool.get_conn()
-       # エラーが起こるかもしれないがまずはtryでまずは実行してみる
        try:
-            # コネクションからカーソル（操作用のオブジェクト）を取得する
-           with conn.cursor() as cur:  # withはカーソルを自動で閉じる
+           # withでカーソルを自動クローズしカーソルを安全に扱う
+           with conn.cursor() as cur:
                sql = "INSERT INTO users (name, email, password_hash) VALUES (%s, %s, %s);"
-               # SQLを実行し、パラメータ（name, email, password_hash）を埋め込む
                cur.execute(sql, (name, email, password_hash,))
-               # データベースに変更を反映（保存）する
                conn.commit()
-        # エラーが起きたらexceptで書いた処理を実行する
        except pymysql.Error as e:
+           # 例外時に500エラーを返すことで異常を検知
            print(f'エラーが発生しています：{e}')
            abort(500)
-        # エラーの有無にかかわらず、finally最後にこの処理を実行する
        finally:
-           # 借りてたコネクションを返す
+           # コネクションを返却
            db_pool.release(conn)
 
 
@@ -39,7 +34,7 @@ class User:
                with conn.cursor() as cur:
                    sql = "SELECT * FROM users WHERE email=%s;"
                    cur.execute(sql, (email,))
-                   user = cur.fetchone()  # 1件だけ取得
+                   user = cur.fetchone()  # 1件だけ取得（emailはユニーク）
                return user
        except pymysql.Error as e:
            print(f'エラーが発生しています：{e}')
