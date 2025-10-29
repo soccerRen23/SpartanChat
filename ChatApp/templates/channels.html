@@ -1,0 +1,10 @@
+{# アプリ動作確認用 #}
+{% extends 'base.html' %} {% block title %}
+<title>home</title>
+{% endblock %} {% block body %}
+<h1>チャンネル一覧</h1>
+{# ログアウトは後々POSTに変更 #}
+<form method="GET" action="{{url_for('logout')}}">
+    <button type="submit">ログアウト</button>
+</form>
+{% endblock %}
