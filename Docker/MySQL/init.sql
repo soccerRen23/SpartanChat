@@ -1,4 +1,3 @@
-
 DROP DATABASE chatapp;
 DROP USER 'testuser';
 
@@ -7,31 +6,46 @@ CREATE DATABASE chatapp;
 USE chatapp
 GRANT ALL PRIVILEGES ON chatapp.* TO 'testuser';
 
+
+# Users テーブル
 CREATE TABLE users (
-    uid VARCHAR(255) PRIMARY KEY,
-    user_name VARCHAR(255) UNIQUE NOT NULL,
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL
+    password_hash VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+# Channels テーブル
 CREATE TABLE channels (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    uid VARCHAR(255) NOT NULL,
-    name VARCHAR(255) UNIQUE NOT NULL,
-    abstract VARCHAR(255),
-    FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE CASCADE
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    name VARCHAR(500) NOT NULL,
+    description VARCHAR(500),
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
+# Messages テーブル
 CREATE TABLE messages (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    uid VARCHAR(255) NOT NULL,
-    cid INT NOT NULL,
-    message TEXT,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (uid) REFERENCES users(uid) ON DELETE CASCADE,
-    FOREIGN KEY (cid) REFERENCES channels(id) ON DELETE CASCADE
+    id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT UNSIGNED NOT NULL,
+    channel_id BIGINT UNSIGNED NOT NULL,
+    message TEXT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (channel_id) REFERENCES channels(id) ON DELETE CASCADE
 );
 
-INSERT INTO users(uid, user_name, email, password) VALUES('970af84c-dd40-47ff-af23-282b72b7cca8','テスト','test@gmail.com','37268335dd6931045bdcdf92623ff819a64244b53d0e746d438797349d4da578');
-INSERT INTO channels(id, uid, name, abstract) VALUES(1, '970af84c-dd40-47ff-af23-282b72b7cca8','ぼっち部屋','テストさんの孤独な部屋です');
-INSERT INTO messages(id, uid, cid, message) VALUES(1, '970af84c-dd40-47ff-af23-282b72b7cca8', '1', '誰かかまってください、、')
+# サンプルアプリと同様にサンプルデータを入れておく
+INSERT INTO users (name, email, password_hash)
+VALUES ('テストユーザー', 'test@example.com', 'hashed_password_sample');
+
+INSERT INTO channels (user_id, name, description)
+VALUES (1, '雑談', 'メインの雑談チャンネル');
+
+INSERT INTO messages (user_id, channel_id, message)
+VALUES (1, 1, 'テストメッセージ');
