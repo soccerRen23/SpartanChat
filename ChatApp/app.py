@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for,flash,session
-from models import User
+from models import User, Channel
 import hashlib,os
 
 app = Flask(__name__)
@@ -92,15 +92,14 @@ def logout():
     return redirect(url_for('login_view'))
 
 
-# （仮置き）チャンネル一覧ページ chennnels.htmlが表示されるようにしただけ
 @app.route('/channels', methods=['GET'])
 def channels_view():
-    user_id = session.get('user_id')
-    if user_id is None:
+    uid = session.get('user_id')
+    if uid is None:
         return redirect(url_for('login_view'))
     else:
-        channels = []
-        uid = user_id
+        channels = Channel.get_all()
+        channels.reverse()
         return render_template('channels.html', channels=channels, uid=uid)
 
 
