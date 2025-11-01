@@ -50,7 +50,7 @@ class Channel:
         try:
             with conn.cursor() as cur:
                 sql = "INSERT INTO channels (user_id, name, description) VALUES (%s, %s, %s);"
-                cur.excute(sql, (uid, channel_name, channel_description,))
+                cur.execute(sql, (uid, channel_name, channel_description,))
                 conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
@@ -76,12 +76,45 @@ class Channel:
 
 
     @classmethod
+    def find_by_cid(cls, cid):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM channels WHERE id=%s;"
+                cur.execute(sql, (cid,))
+                channel = cur.fetchone()
+                return channel
+        except pymysql.Error as e:
+            print(f'エラーが発生しています：{e}')
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+
+    @classmethod
+    def find_by_name(cls, channel_name):
+        conn = db_pool.get_conn()
+        try:
+            with conn.cursor() as cur:
+                sql = "SELECT * FROM channels WHERE name=%s;"
+                cur.execute(sql, (channel_name,))
+                channel = cur.fetchone()
+                return channel
+        except pymysql.Error as e:
+            print(f'エラーが発生しています：{e}')
+            abort(500)
+        finally:
+            db_pool.release(conn)
+
+
+    @classmethod
     def update(cls, new_channel_name, new_channel_description, cid):
         conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "UPDATE channels SET name=%s, description=%s WHERE id=%s;"
                 cur.execute(sql, (new_channel_name, new_channel_description, cid,))
+                conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
             abort(500)
@@ -91,10 +124,12 @@ class Channel:
 
     @classmethod
     def delete(cls, cid):
-        conn = db_pool.get=conn()
+        conn = db_pool.get_conn()
         try:
             with conn.cursor() as cur:
                 sql = "DELETE FROM channels WHERE id=%s;"
+                cur.execute(sql, (cid,))
+                conn.commit()
         except pymysql.Error as e:
             print(f'エラーが発生しています：{e}')
             abort(500)
