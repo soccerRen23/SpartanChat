@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for,flash,session
-from models import User
+from models import User, Channel
 import hashlib,os
 
 app = Flask(__name__)
@@ -92,16 +92,78 @@ def logout():
     return redirect(url_for('login_view'))
 
 
-# （仮置き）チャンネル一覧ページ chennnels.htmlが表示されるようにしただけ
 @app.route('/channels', methods=['GET'])
 def channels_view():
-    user_id = session.get('user_id')
-    if user_id is None:
+    uid = session.get('user_id')
+    if uid is None:
         return redirect(url_for('login_view'))
     else:
-        channels = []
-        uid = user_id
+        channels = Channel.get_all()
+        channels.reverse()
         return render_template('channels.html', channels=channels, uid=uid)
+
+
+@app.route('/channels', methods=['POST'])
+def create_channel():
+    uid = session.get('user_id')
+    if uid is None:
+        return redirect(url_for('login_view'))
+
+    channel_name = request.form.get('channelName')
+    channel = Channel.find_by_name(channel_name)
+
+    if channel == None:
+        channel_description = request.form.get('channelDescription')
+        Channel.create(uid, channel_name, channel_description)
+    else:
+        flash('既に同じ名前のチャンネルが存在しています')
+
+    return redirect(url_for('channels_view'))
+
+# HTMLのformは PUT,DELETEは扱えないので、JavaScriptやミドルウェアライブラリを使わずに実装すると一旦全部POSTで受けるようになる
+@app.route('/channels/<cid>', methods=['POST'])
+def channel_action(cid):
+    pseudo_method = request.form.get('_method', '').upper()
+    if pseudo_method == 'PUT':
+        channel_name = request.form.get('channelName')
+        channel_description = request.form.get('channelDescription')
+        return update_channel(cid, channel_name, channel_description)
+    elif pseudo_method == 'DELETE':
+        return delete_channel(cid)
+    else:
+        return redirect(url_for('channels_view'))
+
+def update_channel(cid, channel_name, channel_description):
+    uid = session.get('user_id')
+    if uid is None:
+        return redirect(url_for('login_view'))
+
+    channel = Channel.find_by_cid(cid)
+    if channel is None:
+        return redirect(url_for('login_view'))
+
+    if channel['user_id'] != uid:
+        flash('チャンネルは作成者のみ更新可能です')
+    else:
+        Channel.update(channel_name, channel_description, cid)
+
+    return redirect(url_for('channels_view'))
+
+def delete_channel(cid):
+    uid = session.get('user_id')
+    if uid is None:
+        return redirect(url_for('login_view'))
+
+    channel = Channel.find_by_cid(cid)
+    if channel is None:
+        return redirect(url_for('login_view'))
+
+    if channel['user_id'] != uid:
+        flash('チャンネルは作成者のみ削除可能です')
+    else:
+        Channel.delete(cid)
+
+    return redirect(url_for('channels_view'))
 
 
 if __name__ == '__main__':
