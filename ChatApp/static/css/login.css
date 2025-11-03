@@ -1,0 +1,41 @@
+
+body {
+  background-color: #B6DEEB;
+  width: 100vw;
+  min-height: 100vw;
+}
+
+.auth-login {
+  margin: 0 auto;
+  width: 1000px;
+  height: 500px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 60%;
+}
+
+.auth-title {
+  display: flex;
+  justify-content: center;
+}
+
+.input-block {
+ margin: 0 auto;
+ display: flex;
+ flex-direction: column;
+}
+
+.label {
+  display: flex;
+  justify-content: left;
+}
+
+.botton {
+  display: flex;
+  justify-content: space-around;
+  padding: 0 10%;
+}
