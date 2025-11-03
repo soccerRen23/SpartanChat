@@ -1,0 +1,42 @@
+{# アプリ動作確認用 #}
+{% extends 'base.html' %} {% block title %}
+<title>home</title>
+{% endblock %} {% block body %}
+<h1>チャンネル一覧</h1>
+{% with messages = get_flashed_messages() %}{% if messages %}
+<ul>
+    {% for message in messages %}
+    <li>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}{% endwith %}
+<ul>
+{% for channel in channels %}
+<li>
+    {{ channel.name }}
+    {{ channel.description }}
+    {% if channel.user_id == uid %}
+        <form method="POST" action="{{url_for('channel_action', cid=channel.id)}}">
+            <input type="hidden" name="_method" value="PUT">
+            <input type="text" name="channelName" required>
+            <input type="text" name="channelDescription">
+            <button type="submit">編集</button>
+        </form>
+        <form method="POST" action="{{url_for('channel_action', cid=channel.id)}}">
+            <input type="hidden" name="_method" value="DELETE">
+            <button type="submit">削除</button>
+        </form>
+    {% endif %}
+</li>
+{% endfor %}
+</ul>
+<form method="POST" action="{{url_for('create_channel')}}">
+    <input type="text" name="channelName" required>
+    <input type="text" name="channelDescription">
+    <button type="submit">チャンネル作成</button>
+</form>
+{# ログアウトは後々POSTに変更 #}
+<form method="GET" action="{{url_for('logout')}}">
+    <button type="submit">ログアウト</button>
+</form>
+{% endblock %}

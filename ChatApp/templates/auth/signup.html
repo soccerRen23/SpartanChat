@@ -1,55 +1,13 @@
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="UTF-8">
-        <title>Welcome To SpartanChat</title>
-        <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
-    </head>
-    <body>
-       <div class="auth-signup">
-         <h1 class="auth-title">Welcome To SpartanChat!!</h1>
-            <form class="auth-form" method="post">
-                <div class= "input-block">
-                    <label for="email-input">name</label>
-                    <input  type="text"
-                            placeholder="名前を入力してください"
-                            name="name"
-                            id="name-input"
-                            style="width: 280px; height: 20px;"
-                            >
-                </div>
-                <div class= "input-block">
-                    <label for="email-input">mail address</label>
-                    <input  type="text"
-                            placeholder="メールアドレスを入力してください"
-                            name="email"
-                            id="email-input"
-                            style="width: 280px; height: 20px;"
-                            >
-                </div>
-                <div class="input-block">
-                    <label for="password-input">password</label>
-                    <input  type="text"
-                            placeholder="パスワードを入力してください(8文字以上)"
-                            name="password"
-                            id="password-input"
-                            style="width: 280px; height: 20px;"
-                            >
-                </div>
-                <div class="input-block">
-                    <label for="Reconfirm_password-input">password</label>
-                    <input  type="text"
-                            placeholder="パスワードを入力してください(再入力)"
-                            name="password"
-                            id="Reconfirm_password-input"
-                            style="width: 280px; height: 20px;"
-                            >
-                </div>
-                <div class="botton">
-                    <button class="signup">signup</button>
-                    <button class="back">back</button>
-                </div>
-            </form>
-        </div>
-    </body>
-</html>
+{# アプリ動作確認用 #}
+{% extends 'auth/base.html' %} {% block title %}
+<title>signup</title>
+{% endblock %} {% block body %}
+<h1>サインアップ画面</h1>
+<form method="post" action="{{url_for('signup_process')}}">
+    <input type="text" name="name" placeholder="name">
+    <input type="text" name="email" placeholder="email">
+    <input type="password" name="password" placeholder="password">
+    <input type="password" name="password-confirmation" placeholder="password-confirmation">
+    <button type="submit">サインアップ</button>
+</form>
+{% endblock %}

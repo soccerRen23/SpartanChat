@@ -105,7 +105,7 @@ jobs:
             KIND="COMMENT"
             STATUS="on PR"
             COLOR="$COLOR_PR"
-            URL=$(jq -r '.pull_request.url' "$EV" | sed 's#api.github.com/repos/#https://github.com/#; s#/pulls/#/pull/#')
+            URL=$(jq -r '.pull_request.url' "$EV" | sed 's#https://api.github.com/repos/#https://github.com/#; s#/pulls/#/pull/#')
             AUTHOR=$(jq -r '.comment.user.login' "$EV")
             BODY=$(jq -r '.comment.body // ""' "$EV")
             TITLE_TXT=$(jq -r '.pull_request.title // ""' "$EV")
