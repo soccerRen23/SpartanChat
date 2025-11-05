@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for,flash,session
-from models import User, Channel
-import hashlib,os
+from models import User, Channel, Message
+import hashlib,os, re
 
 app = Flask(__name__)
 
@@ -33,6 +33,11 @@ def signup_process():
 
     if name == '' or email == '' or password == '':
         flash('名前、メールアドレス、パスワードの全てを入力してください')
+        return redirect(url_for('signup_view'))
+    
+    password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$'
+    if re.match(password_pattern, password) is None:
+        flash('パスワードは8文字以上で、英大文字・英小文字・数字・記号をそれぞれ1文字以上含めてください')
         return redirect(url_for('signup_view'))
 
     if password != passwordConfirmation:
@@ -164,6 +169,94 @@ def delete_channel(cid):
         Channel.delete(cid)
 
     return redirect(url_for('channels_view'))
+
+
+@app.route('/messages', methods=['GET'])
+def messages_view():
+    uid = session.get('user_id')
+    if uid is None:
+        return redirect(url_for('login_view'))
+
+    cid = request.args.get('cid')
+    if cid is None:
+        return redirect(url_for('channels_view'))
+    
+    channel = Channel.find_by_cid(cid)
+    if channel is None:
+        return redirect(url_for('channels_view'))
+    
+    messages = Message.get_all(cid)
+
+    return render_template('messages.html', messages=messages, channel=channel, uid=uid)
+
+
+@app.route('/messages', methods=['POST'])
+def create_message():
+    uid = session.get('user_id')
+    if uid is None:
+        return redirect(url_for('login_view'))
+    
+    cid = request.args.get('cid')
+    if cid is None:
+        return redirect(url_for('channels_view'))
+    
+    message = request.form.get('message')
+
+    if message:
+        Message.create(uid, cid, message)
+
+    return redirect(url_for('messages_view', cid=cid))
+
+
+# HTMLのformは PUT,DELETEは扱えないので、JavaScriptやミドルウェアライブラリを使わずに実装すると一旦全部POSTで受けるようになる
+@app.route('/messages/<mid>', methods=['POST'])
+def message_action(mid):
+    cid = request.args.get('cid')
+    if cid is None:
+        return redirect(url_for('channels_view'))
+    
+    pseudo_method = request.form.get('_method', '').upper()
+    if pseudo_method == 'PUT':
+        new_message = request.form.get('message')
+        return update_message(cid, mid, new_message)
+    elif pseudo_method == 'DELETE':
+        return delete_message(cid, mid)
+    else:
+        return redirect(url_for('messages_view', cid=cid))
+
+
+def update_message(cid, mid, new_message):
+    uid = session.get('user_id')
+    if uid is None:
+        return redirect(url_for('login_view'))
+
+    message = Message.find_by_mid(mid)
+    if message is None:
+        return redirect(url_for('messages_view', cid=cid))
+
+    if message['user_id'] != uid:
+        flash('メッセージは投稿者のみ更新可能です')
+    else:
+        Message.update(new_message, mid)
+
+    return redirect(url_for('messages_view', cid=cid))
+
+
+def delete_message(cid, mid):
+    uid = session.get('user_id')
+    if uid is None:
+        return redirect(url_for('login_view'))
+
+    message = Message.find_by_mid(mid)
+    if message is None:
+        return redirect(url_for('messages_view', cid=cid))
+
+    if message['user_id'] != uid:
+        flash('メッセージは投稿者のみ削除可能です')
+    else:
+        Message.delete(mid)
+
+    return redirect(url_for('messages_view', cid=cid))
 
 
 if __name__ == '__main__':
