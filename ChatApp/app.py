@@ -35,7 +35,7 @@ def signup_process():
         flash('名前、メールアドレス、パスワードの全てを入力してください')
         return redirect(url_for('signup_view'))
     
-    password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^a-zA-Z0-9]).{8,}$'
+    password_pattern = password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+-=;:,./?~])[a-zA-Z0-9!@#$%^&*()_+-=;:,./?~]{8,64}$'
     if re.match(password_pattern, password) is None:
         flash('パスワードは8文字以上で、英大文字・英小文字・数字・記号をそれぞれ1文字以上含めてください')
         return redirect(url_for('signup_view'))
