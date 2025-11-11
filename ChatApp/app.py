@@ -37,7 +37,9 @@ def signup_process():
     
     password_pattern = password_pattern = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*()_+-=;:,./?~])[a-zA-Z0-9!@#$%^&*()_+-=;:,./?~]{8,64}$'
     if re.match(password_pattern, password) is None:
-        flash('パスワードは8文字から64文字以内で、英大文字・英小文字・数字・記号をそれぞれ1文字以上含めてください')
+        flash('パスワードは8文字から64文字以内で、英大文字・英小文字・数字・記号をそれぞれ1文字以上含めてください<br>'
+              '使用できる記号は右のとおりです&emsp;! @ # $ % ^ & * ( ) _ + - = ; : , . / ? ~'
+        ) 
         return redirect(url_for('signup_view'))
 
     if password != passwordConfirmation:
