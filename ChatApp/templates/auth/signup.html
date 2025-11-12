@@ -3,9 +3,18 @@
 <title>signup</title>
 {% endblock %} {% block body %}
 <h1>サインアップ画面</h1>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message|safe }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+{% endwith %}
 <form method="post" action="{{url_for('signup_process')}}">
     <input type="text" name="name" placeholder="name">
-    <input type="text" name="email" placeholder="email">
+    <input type="email" name="email" placeholder="email">
     <input type="password" name="password" placeholder="password">
     <input type="password" name="password-confirmation" placeholder="password-confirmation">
     <button type="submit">サインアップ</button>

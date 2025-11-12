@@ -13,7 +13,7 @@
 <ul>
 {% for channel in channels %}
 <li>
-    {{ channel.name }}
+    <a href="{{ url_for('messages_view', cid=channel.id)}}">{{ channel.name }}</a>
     {{ channel.description }}
     {% if channel.user_id == uid %}
         <form method="POST" action="{{url_for('channel_action', cid=channel.id)}}">
