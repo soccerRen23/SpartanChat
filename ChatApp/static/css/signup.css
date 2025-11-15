@@ -1,0 +1,50 @@
+body {
+  background-color: #B6DEEB;
+  width: 100vw;
+  min-height: 100vw;
+}
+
+.auth-login {
+  margin: 0 auto;
+  width: 1000px;
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-block {
+ margin: 0 auto;
+ display: flex;
+ flex-direction: column;
+}
+
+.label {
+  display: flex;
+  justify-content: left;
+}
+
+.botton{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 5px 250px 0 0;
+}
+
+.signup {
+  display: flex;
+  justify-content: space-around;
+  margin: 0 0 5px 0;
+}
