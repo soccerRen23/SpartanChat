@@ -30,13 +30,52 @@
 </li>
 {% endfor %}
 </ul>
-<form method="POST" action="{{url_for('create_channel')}}">
-    <input type="text" name="channelName" required>
-    <input type="text" name="channelDescription">
-    <button type="submit">チャンネル作成</button>
-</form>
+
+
+<button id="open-create-channel-modal-button">新しいチャンネルを作成</button>
+
+<div id="create-channel-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <!-- 閉じるボタンのIDをJavaScriptと合わせる -->
+      <span class="modalClose" id="add-page-close-button">×</span>
+    </div>
+    <form
+      name="createChannelForm"
+      class="modal-body"
+      action="{{url_for('create_channel')}}"
+      method="POST"
+    >
+      <input
+        type="text"
+        placeholder="Channel name"
+        class="channel-form-input"
+        name="channelName"
+        required
+      />
+      <input
+        type="text"
+        placeholder="Channel description"
+        class="channel-form-input"
+        name="channelDescription"
+      />
+      <button type="submit">チャンネル作成</button> <!-- フォームの送信ボタン -->
+    </form>
+  </div>
+</div>
+
 {# ログアウトは後々POSTに変更 #}
 <form method="GET" action="{{url_for('logout')}}">
     <button type="submit">ログアウト</button>
 </form>
 {% endblock %}
+
+
+<!-- ここにJavaScriptファイルを読み込むスクリプトタグを追加 -->
+<script src="{{ url_for('static', filename='js/create-channel.js') }}" defer></script>
+<script>
+    // create-channel.js の initCreateChannelModal 関数を呼び出す
+    document.addEventListener('DOMContentLoaded', () => {
+        initCreateChannelModal();
+    });
+</script>

@@ -1,0 +1,274 @@
+/* 各モーダルのCSS */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 20;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  background-color: rgba(240, 240, 240, 0.85);
+  justify-content: center;
+  align-items: center;
+}
+
+#create-channel-modal,
+#update-channel-modal,
+#delete-channel-modal {
+  display: none;
+}
+
+.modal-content {
+  background-color: var(--navy);
+  margin: 20% auto;
+  width: 70%;
+  border: 12px solid var(--navy_blue);
+  box-shadow: 0 5px 8px 0 rgba(0, 0, 0, 0.2), 0 7px 20px 0 rgba(0, 0, 0, 0.17);
+  animation-name: modalopen;
+  animation-duration: 1s;
+  position: relative;
+}
+
+@keyframes modalopen {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-header h1 {
+  margin: 1rem 0;
+}
+
+.modal-header {
+  background: var(--ash_grey);
+  padding: 3px 15px 3px 32px;
+  color: var(--navy);
+  display: flex;
+  justify-content: space-between;
+}
+
+.modal-header h5,
+.modal-header span {
+  z-index: 4;
+}
+
+.modalClose {
+  font-size: 2rem;
+}
+
+.modalClose:hover {
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--snow);
+  border-radius: 0 0 20px 20px;
+}
+
+.channel-form-input {
+  width: 70%;
+  background-color: transparent;
+  margin-top: 8px;
+  margin-bottom: 20px;
+  padding: 0.5rem;
+  color: var(--snow);
+}
+
+.channel-form-input::placeholder {
+  color: var(--snow);
+  font-size: 12px;
+}
+
+.channel-form-input:hover {
+  background-color: var(--navy_blue);
+  color: var(--snow);
+}
+
+.channel-form-input:focus {
+  background-color: var(--navy_blue);
+  color: var(--snow);
+}
+
+.modal-gif {
+  position: absolute;
+  z-index: 2;
+  top: -65px;
+  left: 30%;
+}
+
+.modal-body p,
+.modal-body a {
+  width: 70%;
+}
+
+.modal-body button {
+  width: 70%;
+  background-color: var(--salmon_pink);
+}
+
+#delete-channel-confirmation-button {
+  width: 100%;
+}
+
+.modal-body button:hover {
+  background-color: var(--middle_pink);
+}
+
+/* ========================================================== */
+/* レスポンシブ */
+
+@media screen and (max-width: 639px) {
+  .modal-content {
+    margin: 35% auto;
+    width: 95%;
+  }
+  #modal-gif {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 640px) and (max-width: 670px) {
+  .modal-content {
+    width: 95%;
+  }
+  .modal {
+    padding-left: 60px;
+  }
+}
+@media only screen and (min-width: 671px) and (max-width: 1024px) {
+  .modal-content {
+    width: 80%;
+  }
+  .modal {
+    padding-left: 60px;
+  }
+}
+
+@media screen and (min-width: 1024px) {
+  .modal-content {
+    width: 70%;
+  }
+}
+
+@media screen and (min-width: 1025px) {
+  .modal-content {
+    width: 50%;
+  }
+}
+
+.button {
+  background: orange;
+  border-radius: 12px;
+  box-shadow: 2px 4px 6px 3px rgba(0, 0, 0, .24);
+  border: 1px solid orange;
+  font-size: 16px;
+  line-height: 1.6;
+  display: block;
+  padding: 12px 20px;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+  margin: 0;
+}
+
+
+
+
+
+
+
+
+* モーダルを開くボタン */
+.modal-open{
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  font-size: 16px;
+  font-weight: bold;
+  width: 300px;
+  height: 60px;
+  color: #fff;
+  background: #000;
+  border: none;
+  cursor: pointer;
+  translate: -50% -50%;
+}
+
+/* モーダルと背景の指定 */
+.modal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  background: rgba(0,0,0,50%);
+  padding: 40px 20px;
+  overflow: auto;
+  opacity: 0;
+  visibility: hidden;
+  transition: .3s;
+  box-sizing: border-box;
+}
+
+/* モーダルの擬似要素の指定 */
+.modal:before{
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  margin-left: -0.2em;
+}
+
+/* クラスが追加された時の指定 */
+.modal.is-active{
+  opacity: 1;
+  visibility: visible;
+}
+
+/* モーダル内側の指定 */
+.modal-container{
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  max-width: 600px;
+  width: 90%;
+}
+
+/* モーダルを閉じるボタンの指定 */
+.modal-close{
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -20px;
+  right: -20px;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  background: #000;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+/* モーダルのコンテンツ部分の指定 */
+.modal-content{
+  background: #fff;
+  text-align: left;
+  line-height: 1.8;
+  padding: 20px;
+}
+
+/* モーダルのコンテンツ部分のテキストの指定 */
+.modal-content p{
+  margin: 1em 0;
+}
