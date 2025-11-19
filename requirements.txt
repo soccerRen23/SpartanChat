@@ -24,4 +24,7 @@ shellescape==3.8.1
 urllib3==1.26.12
 webassets==2.0
 Werkzeug==2.2.2
-
+# 追加したライブラリ
+Flask-SocketIO==5.3.7
+eventlet==0.33.3
+python-dotenv==1.0.0

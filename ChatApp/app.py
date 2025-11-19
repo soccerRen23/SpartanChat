@@ -1,11 +1,16 @@
 from flask import Flask, render_template, request, redirect, url_for,flash,session
+from flask_socketio import SocketIO, emit # 非同期通信のために追加
+from dotenv import load_dotenv
 from models import User, Channel, Message
 import hashlib,os, re
+load_dotenv() # 追加しました.envファイルの内容を環境変数に反映
 
 app = Flask(__name__)
 
 # sessionの暗号化キー .envから取得
 app.secret_key = os.getenv('SECRET_KEY')
+# SockeyIOのセットアップのため追加
+socketio = SocketIO(app)
 
 
 # ルート画面のリダイレクト処理
@@ -260,6 +265,29 @@ def delete_message(cid, mid):
 
     return redirect(url_for('messages_view', cid=cid))
 
+# SocketIOの実行部分を追加
+# メッセージの読み込み
+@socketio.on('load messages')
+def load_messages(data=None):
+    if not data:
+        return
+    cid = data.get('cid')
+    if not cid:
+        return
+    messages = Message.get_all(cid)
+    messages_list = [msg['message'] for msg in messages]
+    emit('messages loaded', messages_list)
+
+# メッセージの登録
+@socketio.on('send message')
+def send_message(data):
+    uid = data.get('user_id')
+    cid = data.get('cid')
+    message = data.get('message')
+    if uid and cid and message:
+        Message.create(uid, cid, message)
+        emit('new message', message, broadcast=True)
+
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0",debug=True)
+    socketio.run(app, host="0.0.0.0", debug=True)

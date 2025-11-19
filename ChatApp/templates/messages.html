@@ -1,44 +1,57 @@
-{# アプリ動作確認用 #}
-{% extends 'base.html' %} {% block title %}
-<title>home</title>
-{% endblock %} {% block body %}
-<h1>{{ channel.name}}のメッセージ一覧</h1>
-<p>{{ channel.description}}</p>
-{% with messages = get_flashed_messages() %}{% if messages %}
-<ul>
-    {% for message in messages %}
-    <li>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}{% endwith %}
-<ul>
-{% for message in messages %}
-  <li>
-    {{ message.name }}：{{ message.message }}
-    {% if message.user_id == uid %}
-      <form method="POST" action="{{ url_for('message_action', cid=channel.id, mid=message.id) }}">
-        <input type="hidden" name="_method" value="PUT">
-        <input type="text" name="message" placeholder="編集内容" required>
-        <button type="submit">編集</button>
-      </form>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/destyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/messages.css') }}">
+    <title>チャットページ</title>
+    <!-- socket.ioの読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
 
-      <form method="POST" action="{{ url_for('message_action', cid=channel.id, mid=message.id) }}">
-        <input type="hidden" name="_method" value="DELETE">
-        <button type="submit">削除</button>
-      </form>
-    {% endif %}
-  </li>
-{% endfor %}
-</ul>
-<form method="POST" action="{{ url_for('create_message', cid=channel.id) }}">
-    <input type="text" name="message" placeholder="メッセージを入力" required>
-    <button type="submit">投稿</button>
-</form>
-<form method="GET" action="{{ url_for('channels_view') }}">
-  <button type="submit">チャンネル一覧に戻る</button>
-</form>
-{# ログアウトは後々POSTに変更 #}
-<form method="GET" action="{{ url_for('logout') }}">
-  <button type="submit">ログアウト</button>
-</form>
-{% endblock %}
+            // Socket.ioのセットアップ
+            const socket = io();
+
+            const messageInput = document.getElementById('message-input');
+            const messageButton = document.getElementById('send-message');
+            const messagesList = document.getElementById('messages');
+
+            // 受け取ったメッセージを描画する
+            const appendMessage = message => {
+                const li = document.createElement('li');
+                li.textContent = message;
+                messagesList.appendChild(li);
+            };
+
+            // サーバーとの接続確立
+            socket.on('connect', () => {
+              socket.emit('load messages', { cid: "{{ channel['id'] }}" });
+            });
+
+            // メッセージ全件受信処理
+            socket.on('messages loaded', messages => messages.forEach(appendMessage));
+
+            // メッセージ送信処理
+            messageButton.addEventListener('click', () => {
+                socket.emit('send message',{
+                  user_id: "{{ uid }}",
+                  cid: "{{ channel['id'] }}", 
+                  message: messageInput.value
+                });
+                messageInput.value = '';
+                return false;
+            });
+
+            // メッセージ受信処理
+            socket.on('new message', appendMessage);
+        });
+    </script>
+</head>
+<body>
+    <h1>チャットページ</h1>
+    <ul id="messages"></ul>
+    <input type="text" id="message-input" placeholder="メッセージを入力">
+    <button id="send-message">送信</button>
+</body>
+</html>
