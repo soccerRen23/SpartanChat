@@ -5,10 +5,12 @@
 {% endblock %}{% block body %}
 <div class="auth-login">
     <h1 class="auth-title">Welcome To SpartanChat!!</h1>
-    <form class="auth-form" method="post">
+
+    <form class="auth-form" method="post" action="{{url_for('login_process')}}">
+
         <div class= "input-block">
             <label for="email-input">mail address</label>
-            <input  type="text"
+            <input  type="email"
                     placeholder="メールアドレスを入力してください"
                     name="email"
                     id="email-input"
@@ -17,7 +19,7 @@
         </div>
         <div class="input-block">
             <label for="password-input">password</label>
-            <input  type="text"
+            <input  type="password"
                     placeholder="パスワードを入力してください(8文字以上)"
                     name="password"
                     id="password-input"

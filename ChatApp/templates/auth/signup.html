@@ -3,49 +3,62 @@
 {% endblock %}{% block title %}
 <title>Welcome To SpartanChat!!</title>
 {% endblock %}{% block body %}
-       <div class="auth-signup">
-         <h1 class="auth-title">Welcome To SpartanChat!!</h1>
-            <form class="auth-form" method="post">
-                <div class= "input-block">
-                    <label for="email-input">name</label>
-                    <input  type="text"
-                            placeholder="名前を入力してください"
-                            name="name"
-                            id="name-input"
-                            style="width: 300px; height: 20px;"
-                            >
-                </div>
-                <div class= "input-block">
-                    <label for="email-input">mail address</label>
-                    <input  type="text"
-                            placeholder="メールアドレスを入力してください"
-                            name="email"
-                            id="email-input"
-                            style="width: 300px; height: 20px;"
-                            >
-                </div>
-                <div class="input-block">
-                    <label for="password-input">password</label>
-                    <input  type="text"
-                            placeholder="パスワードを入力してください(8文字以上)"
-                            name="password"
-                            id="password-input"
-                            style="width: 300px; height: 20px;"
-                            >
-                </div>
-                <div class="input-block">
-                    <label for="Reconfirm_password-input">password</label>
-                    <input  type="text"
-                            placeholder="パスワードを入力してください(再入力)"
-                            name="password"
-                            id="Reconfirm_password-input"
-                            style="width: 300px; height: 20px;"
-                            >
-                </div>
-                <div class="botton">
-                    <button class="signup">signup</button>
-                    <button class="back">back</button>
-                </div>
-            </form>
-        </div>
+
+<!-- エラーメッセージの出力 -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message|safe }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+{% endwith %}
+
+  <div class="auth-signup">
+    <h1 class="auth-title">Welcome To SpartanChat!!</h1>
+      <form class="auth-form" method="post" action="{{url_for('signup_process')}}">
+
+          <div class= "input-block">
+              <label for="email-input">name</label>
+              <input  type="text"
+                      placeholder="名前を入力してください"
+                      name="name"
+                      id="name-input"
+                      style="width: 300px; height: 20px;"
+                      >
+          </div>
+          <div class= "input-block">
+              <label for="email-input">mail address</label>
+              <input  type="email"
+                      placeholder="メールアドレスを入力してください"
+                      name="email"
+                      id="email-input"
+                      style="width: 300px; height: 20px;"
+                      >
+          </div>
+          <div class="input-block">
+              <label for="password-input">password</label>
+              <input  type="password"
+                      placeholder="パスワードを入力してください(8文字以上)"
+                      name="password"
+                      id="password-input"
+                      style="width: 300px; height: 20px;"
+                      >
+          </div>
+          <div class="input-block">
+              <label for="Reconfirm_password-input">password</label>
+              <input  type="password"
+                      placeholder="パスワードを入力してください(再入力)"
+                      name="password-confirmation"
+                      id="Reconfirm_password-input"
+                      style="width: 300px; height: 20px;"
+                      >
+          </div>
+          <div class="botton">
+              <button class="signup">signup</button>
+              <button class="back">back</button>
+          </div>
+      </form>
+  </div>
 {% endblock %}
