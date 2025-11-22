@@ -3,6 +3,18 @@
 {% endblock %}{% block title %}
 <title>Welcome To SpartanChat!!</title>
 {% endblock %}{% block body %}
+
+<!-- エラーメッセージの出力 -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+  <ul>
+    {% for message in messages %}
+    <li>{{ message|safe }}</li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+{% endwith %}
+
 <div class="auth-login">
     <h1 class="auth-title">Welcome To SpartanChat!!</h1>
 
