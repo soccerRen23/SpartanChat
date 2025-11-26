@@ -8,10 +8,15 @@
 {% endblock %}
 {% block body %}
 <h1>{{ channel.name}}のメッセージ一覧</h1>
-<!-- logout in top-right for messages page -->
-<form class="logout-topright" method="POST" action="{{ url_for('logout') }}">
-  <button type="submit">ログアウト</button>
-</form>
+<!-- top-right action buttons (Channels / Logout) -->
+<div class="top-right-actions">
+  <form class="channels-topright" method="GET" action="{{ url_for('channels_view') }}">
+    <button type="submit">チャンネル一覧に戻る</button>
+  </form>
+  <form class="logout-topright" method="POST" action="{{ url_for('logout') }}">
+    <button type="submit">ログアウト</button>
+  </form>
+</div>
 <p>{{ channel.description}}</p>
 {% with messages = get_flashed_messages() %}{% if messages %}
 <ul>
@@ -46,8 +51,6 @@
   <input id="message-input" type="text" name="message" placeholder="メッセージを入力" required>
   <button id="send-message" type="submit">投稿</button>
 </form>
-<form method="GET" action="{{ url_for('channels_view') }}">
-  <button type="submit">チャンネル一覧に戻る</button>
-</form>
+{# channel list navigation moved to top-right #}
 {# bottom logout removed — top-right logout is added above the header #}
 {% endblock %}
