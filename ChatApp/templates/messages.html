@@ -8,6 +8,10 @@
 {% endblock %}
 {% block body %}
 <h1>{{ channel.name}}のメッセージ一覧</h1>
+<!-- logout in top-right for messages page -->
+<form class="logout-topright" method="POST" action="{{ url_for('logout') }}">
+  <button type="submit">ログアウト</button>
+</form>
 <p>{{ channel.description}}</p>
 {% with messages = get_flashed_messages() %}{% if messages %}
 <ul>
@@ -17,8 +21,9 @@
 </ul>
 {% endif %}{% endwith %}
 <ul>
+<ul id="messages">
 {% for message in messages %}
-  <li>
+  <li class="message {% if message.user_id != uid %}left{% else %}right{% endif %}">
     {{ message.name }}：{{ message.message }}
     {% if message.user_id == uid %}
       <form method="POST" action="{{ url_for('message_action', cid=channel.id, mid=message.id) }}">
@@ -35,15 +40,14 @@
   </li>
 {% endfor %}
 </ul>
-<form method="POST" action="{{ url_for('create_message', cid=channel.id) }}">
-    <input type="text" name="message" placeholder="メッセージを入力" required>
-    <button type="submit">投稿</button>
+
+<!-- fixed chat form at bottom center -->
+<form id="chat-form" method="POST" action="{{ url_for('create_message', cid=channel.id) }}">
+  <input id="message-input" type="text" name="message" placeholder="メッセージを入力" required>
+  <button id="send-message" type="submit">投稿</button>
 </form>
 <form method="GET" action="{{ url_for('channels_view') }}">
   <button type="submit">チャンネル一覧に戻る</button>
 </form>
-{# ログアウトは後々POSTに変更 #}
-<form method="POST" action="{{ url_for('logout') }}">
-  <button type="submit">ログアウト</button>
-</form>
+{# bottom logout removed — top-right logout is added above the header #}
 {% endblock %}
