@@ -127,7 +127,7 @@ body { padding-bottom: 120px; }
     top: 12px;
     right: 12px;
     display: flex;
-    gap: 12px; /* more space between buttons */
+    gap: 20px; /* increased space between buttons */
     z-index: 2000;
     align-items: center;
     white-space: nowrap; /* avoid internal wrapping */
@@ -160,7 +160,7 @@ body { padding-bottom: 120px; }
         align-items: flex-end;
         top: 8px;
         right: 8px;
-        gap: 8px;
+        gap: 12px; /* increased vertical spacing when stacked */
     }
     .top-right-actions .channels-topright button,
     .top-right-actions .logout-topright button {
