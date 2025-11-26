@@ -1,12 +1,7 @@
 {# アプリ動作確認用 #}
-{% extends 'base.html' %}
-{% block extra_head %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/messages.css') }}">
-{% endblock %}
-{% block title %}
+{% extends 'base.html' %} {% block title %}
 <title>home</title>
-{% endblock %}
-{% block body %}
+{% endblock %} {% block body %}
 <h1>{{ channel.name}}のメッセージ一覧</h1>
 <p>{{ channel.description}}</p>
 {% with messages = get_flashed_messages() %}{% if messages %}
@@ -43,7 +38,7 @@
   <button type="submit">チャンネル一覧に戻る</button>
 </form>
 {# ログアウトは後々POSTに変更 #}
-<form method="POST" action="{{ url_for('logout') }}">
+<form method="GET" action="{{ url_for('logout') }}">
   <button type="submit">ログアウト</button>
 </form>
 {% endblock %}

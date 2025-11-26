@@ -93,7 +93,7 @@ def login_process():
 
 
 # ログアウト
-@app.route('/logout', methods=["POST"])  # メソッドをPOST変更しました
+@app.route('/logout', methods=["GET"])  # 後でメソッドをPOST変更します
 def logout():
     session.clear()
     return redirect(url_for('login_view'))
