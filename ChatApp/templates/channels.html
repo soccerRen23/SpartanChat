@@ -1,11 +1,11 @@
 {# アプリ動作確認用 #}
 {% extends 'base.html' %} {% block title %}
-<title>home</title>
+<title>Channels</title>
 {% endblock %}
 {% block body %}
 <div class="container">
   <div class="channels-header">
-    <h1>チャンネル一覧</h1>
+    <h1>Channels</h1>
     <form method="POST" action="{{url_for('logout')}}" class="logout-form">
       <button type="submit" class="secondary">ログアウト</button>
     </form>
@@ -49,6 +49,5 @@
       <button type="submit">チャンネル作成</button>
   </form>
 
-  {# ログアウトボタンはヘッダーへ移動しました #}
 </div>
 {% endblock %}
