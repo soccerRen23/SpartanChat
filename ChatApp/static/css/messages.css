@@ -120,33 +120,3 @@ body { padding-bottom: 120px; }
 .logout-topright button:hover {
     filter: brightness(0.95);
 }
-
-/* container for both channels & logout in the top-right */
-.top-right-actions {
-    position: fixed;
-    top: 12px;
-    right: 12px;
-    display: flex;
-    gap: 8px;
-    z-index: 2000;
-    align-items: center;
-}
-.top-right-actions form { margin: 0; }
-.top-right-actions button {
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-}
-.top-right-actions .channels-topright button {
-    background: #1976d2;
-    color: #fff;
-}
-.top-right-actions .channels-topright button:hover {
-    filter: brightness(0.95);
-}
-.top-right-actions .logout-topright button {
-    background: #e0e0e0;
-    color: #222;
-}
