@@ -38,10 +38,11 @@
                     style="width: 300px; height: 20px;"
                     >
         </div>
-        <div class="botton">
-            <button class="login">login</button>
-            <button class="signup">sign up</button>
-        </div>
+        <button class="login">login</button>
+        <a href="{{ url_for('signup_view') }}" class="botton login">
+          sign up
+        </a>
     </form>
+        
 </div>
 {% endblock %}
