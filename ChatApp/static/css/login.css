@@ -42,7 +42,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 5px 250px 0 0;
+  padding: 5px 205px 0 0;
 }
 
 .login {
