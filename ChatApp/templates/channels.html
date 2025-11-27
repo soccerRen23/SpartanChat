@@ -42,12 +42,10 @@
   </li>
   {% endfor %}
   </ul>
-
-  <form method="POST" action="{{url_for('create_channel')}}" class="create-channel">
-      <input type="text" name="channelName" placeholder="チャンネル名" required>
-      <input type="text" name="channelDescription" placeholder="説明（任意）">
-      <button type="submit">チャンネル作成</button>
-  </form>
-
+  <button id="create-channel-button">チャンネル作成</button>
+  {% include 'modal/create-channel.html' %}
+  {% block script %}
+    <script  src="static\js\channels\create-channel.js" type="module"></script>
+  {% endblock %}
 </div>
 {% endblock %}
