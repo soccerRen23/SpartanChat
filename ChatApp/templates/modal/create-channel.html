@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
+<div id="create-channel-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5>Add channel</h5>
+      <span class="modalClose" id="add-page-close-button">×</span>
+    </div>
+    <form
+      name="createChannelForm"
+      class="modal-body"
+      action="/channels"
+      method="POST"
+    >
+      <input
+        type="text"
+        placeholder="チャンネル名"
+        class="channel-form-input"
+        name="channelName"
+        required
+      />
+      <input
+        type="text"
+        placeholder="説明（任意）"
+        class="channel-form-input"
+        name="channelDescription"
+      />
+      <button>登録</button>
+    </form>
+  </div>
+</div>
